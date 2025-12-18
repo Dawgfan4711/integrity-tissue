@@ -1,17 +1,26 @@
 import { useState } from 'react'
 import { Phone } from 'lucide-react'
-import { useSignUp, useSignIn, useAuth } from '@clerk/clerk-react'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate
+} from 'react-router-dom'
+import Dashboard from './components/Dashboard'
+import { useEffect } from 'react'
 
-function App() {
+// Simple in-memory auth (replace with real JWT/session later)
+let isAuthenticated = false
+
+function AuthFlow() {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [code, setCode] = useState('')
   const [stage, setStage] = useState('enterPhone') // 'enterPhone' or 'enterCode'
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState(null)
 
-  const { isLoaded: signUpLoaded, signUp } = useSignUp()
-  const { isLoaded: signInLoaded, signIn, setActive } = useSignIn()
-  const { isSignedIn } = useAuth()
+  const navigate = useNavigate()
 
   const formatPhoneNumber = (value) => {
     const numbers = value.replace(/\D/g, '')
@@ -31,37 +40,28 @@ function App() {
       return
     }
 
-    if (!signUpLoaded || !signInLoaded) return
-
     setIsSubmitting(true)
     setError(null)
 
     const fullPhone = `+1${phoneNumber.replace(/\D/g, '')}`
 
     try {
-      // Try sign-in first (for returning users)
-      let signInAttempt
-      try {
-        signInAttempt = await signIn.create({
-          strategy: 'phone_code',
-          identifier: fullPhone,
-        })
-      } catch {} // Ignore if user doesn't exist
+      const res = await fetch('/api/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: fullPhone })
+      })
 
-      if (signInAttempt?.status === 'needs_first_factor' || signInAttempt?.status === 'complete') {
+      const data = await res.json()
+
+      if (res.ok) {
         setStage('enterCode')
-        alert('Verification code sent!')
-        setIsSubmitting(false)
-        return
+        alert('Verification code sent! Check your phone.')
+      } else {
+        setError(data.error || 'Failed to send code')
       }
-
-      // If no existing user, create sign-up
-      const signUpAttempt = await signUp.create({ phoneNumber: fullPhone })
-      await signUp.preparePhoneNumberVerification({ strategy: 'phone_code' })
-      setStage('enterCode')
-      alert('Verification code sent!')
     } catch (err) {
-      setError(err.errors?.[0]?.message || 'Failed to send code. Please try again.')
+      setError('Network error. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -76,46 +76,35 @@ function App() {
     setIsSubmitting(true)
     setError(null)
 
-    try {
-      let result
-      if (signIn?.createdSessionId) {
-        result = await signIn.attemptFirstFactor({
-          strategy: 'phone_code',
-          code,
-        })
-      } else {
-        result = await signUp.attemptPhoneNumberVerification({ code })
-      }
+    const fullPhone = `+1${phoneNumber.replace(/\D/g, '')}`
 
-      if (result.status === 'complete') {
-        await setActive({ session: result.createdSessionId })
-        alert('Successfully signed in!')
-        // You can redirect or show a dashboard here
+    try {
+      const res = await fetch('/api/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: fullPhone, code })
+      })
+
+      const data = await res.json()
+
+      if (res.ok && data.success) {
+        isAuthenticated = true
+        navigate('/dashboard')
+      } else {
+        setError(data.error || 'Invalid or expired code')
       }
     } catch (err) {
-      setError(err.errors?.[0]?.message || 'Invalid or expired code')
+      setError('Network error. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  // If already signed in (optional: show different UI)
-  if (isSignedIn) {
-    return (
-      <div style={{
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: '#1a1a2e',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        color: '#e2e8f0',
-        fontFamily: 'system-ui, -apple-system, sans-serif'
-      }}>
-        <h1>Welcome! You are signed in.</h1>
-      </div>
-    )
-  }
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard', { replace: true })
+    }
+  }, [])
 
   return (
     <div style={{
@@ -192,7 +181,7 @@ function App() {
           Provider Portal
         </p>
 
-        {/* Phone or Code Input */}
+        {/* Phone Input Stage */}
         {stage === 'enterPhone' ? (
           <>
             <div style={{ marginBottom: '16px' }}>
@@ -262,6 +251,7 @@ function App() {
           </>
         ) : (
           <>
+            {/* Verification Code Stage */}
             <div style={{ marginBottom: '16px' }}>
               <label style={{
                 display: 'block',
@@ -338,9 +328,34 @@ function App() {
             </button>
           </>
         )}
-
       </div>
     </div>
+  )
+}
+
+function ProtectedRoute({ children }) {
+  if (!isAuthenticated) {
+    return <Navigate to="/" replace />
+  }
+  return children
+}
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<AuthFlow />} />
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Router>
   )
 }
 
