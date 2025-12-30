@@ -30,7 +30,7 @@ const rows = [
 const DashboardTable: React.FC = () => (
   <Table className="bg-white rounded-xl">
     <TableHeader>
-      <TableRow className="bg-[#18192B] text-white text-left">
+      <TableRow className="bg-[#18192B] text-white text-left !hover:bg-[#18192B]">
         <TableHead className="px-6 py-3 font-semibold text-white">Date</TableHead>
         <TableHead className="px-6 py-3 font-semibold text-white">Practice</TableHead>
         <TableHead className="px-6 py-3 font-semibold text-white">Provider</TableHead>

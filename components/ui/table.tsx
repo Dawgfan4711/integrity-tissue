@@ -19,25 +19,7 @@ function Table({ className, ...props }: React.ComponentProps<"table">) {
   )
 }
 
-function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
-  return (
-    <thead
-      data-slot="table-header"
-      className={cn("[&_tr]:border-b", className)}
-      {...props}
-    />
-  )
-}
 
-function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
-  return (
-    <tbody
-      data-slot="table-body"
-      className={cn("[&_tr:last-child]:border-0", className)}
-      {...props}
-    />
-  )
-}
 
 function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   return (
@@ -52,17 +34,49 @@ function TableFooter({ className, ...props }: React.ComponentProps<"tfoot">) {
   )
 }
 
+
+// Context to track if inside thead
+const TableSectionContext = React.createContext<string | undefined>(undefined);
+
+function TableHeader({ className, ...props }: React.ComponentProps<"thead">) {
+  return (
+    <TableSectionContext.Provider value="thead">
+      <thead
+        data-slot="table-header"
+        className={cn("[&_tr]:border-b", className)}
+        {...props}
+      />
+    </TableSectionContext.Provider>
+  );
+}
+
+function TableBody({ className, ...props }: React.ComponentProps<"tbody">) {
+  return (
+    <TableSectionContext.Provider value="tbody">
+      <tbody
+        data-slot="table-body"
+        className={cn("[&_tr:last-child]:border-0", className)}
+        {...props}
+      />
+    </TableSectionContext.Provider>
+  );
+}
+
 function TableRow({ className, ...props }: React.ComponentProps<"tr">) {
+  const section = React.useContext(TableSectionContext);
+  const isHeader = section === "thead";
   return (
     <tr
       data-slot="table-row"
       className={cn(
-        "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors",
+        isHeader
+          ? "border-b transition-colors"
+          : "hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors",
         className
       )}
       {...props}
     />
-  )
+  );
 }
 
 function TableHead({ className, ...props }: React.ComponentProps<"th">) {
