@@ -2,7 +2,7 @@ import React from "react";
 
 export default function ProviderLogoHeader() {
   return (
-    <div className="flex flex-col items-center mb-8 mt-8">
+    <div className="flex flex-col items-center mb-8 mt-0">
       <div className="w-12 h-12 border-2 border-muted rounded-lg flex items-center justify-center mb-4 text-muted-foreground">
         <span className="text-2xl">+</span>
       </div>

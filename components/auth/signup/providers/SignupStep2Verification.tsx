@@ -7,6 +7,8 @@ import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import ProviderLogoHeader from "./ProviderLogoHeader";
+import SignupStepper from "./SignupStepper";
 
 const codeSchema = z.object({
   code: z.string().length(6, "Enter the 6-digit code"),
@@ -44,44 +46,17 @@ export default function SignupStep2Verification({ phone, onNext, onBack }: Signu
     <>
       <div className="w-full max-w-md p-8">
         {/* Progress Steps */}
-        <div className="mb-8 flex items-center justify-center gap-4">
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mb-2">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <span className="text-white text-xs">Clinic Details</span>
-          </div>
-          <div className="w-24 h-1 bg-white mb-6" />
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mb-2">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <span className="text-white text-xs">Verification</span>
-          </div>
-          <div className="w-24 h-1 bg-gray-600 mb-6" />
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 rounded-full bg-gray-600 flex items-center justify-center mb-2" />
-            <span className="text-gray-400 text-xs">Agreement</span>
-          </div>
-        </div>
+        <SignupStepper currentStep={2} />
 
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-12 h-12 border-2 border-white rounded-lg flex items-center justify-center mb-4 text-white">
-            <span className="text-2xl">+</span>
-          </div>
-          <div className="w-16 h-16 bg-white rounded mb-6" />
-          <h1 className="text-2xl font-light tracking-widest text-white mb-1">INTEGRITY</h1>
-          <h1 className="text-2xl font-light tracking-widest text-white mb-2">TISSUE</h1>
-          <p className="text-gray-400 text-xs tracking-widest">— SOLUTIONS —</p>
+        {/* Logo/Header Section */}
+        <div className="mb-8">
+          {/* Use ProviderLogoHeader for consistent branding */}
+          <ProviderLogoHeader />
         </div>
 
         <p className="text-gray-400 text-sm mb-6 text-center">Provider Portal</p>
 
-        <div className="bg-white rounded-xl p-8 shadow mb-4">
+        <div className="bg-white rounded-xl p-8 mb-4">
           <div className="text-center text-gray-600 mb-2">Code sent to</div>
           <div className="text-center font-bold text-lg mb-6 text-black">{displayPhone}</div>
           <Form {...codeForm}>

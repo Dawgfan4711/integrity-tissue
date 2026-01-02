@@ -136,6 +136,10 @@ export default function AuthComponent() {
             }}
           />
         )}
+        <div className="mt-6 text-center">
+          <span className="text-muted-foreground text-sm">Don&apos;t have an account? </span>
+          <a href="/signup" className="text-primary underline text-sm hover:text-primary/80">Register</a>
+        </div>
       </div>
     </div>
   );
