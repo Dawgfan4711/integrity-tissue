@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useForm, useWatch } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import SignatureCanvas from "react-signature-canvas";
 
 interface SignupStep3Props {
   onNext: (signatureData: SignatureData) => void;
@@ -20,6 +21,7 @@ const signatureSchema = z.object({
   coveredEntitySignature: z.string().min(1, "Signature is required"),
   coveredEntityTitle: z.string().min(1, "Title is required"),
   coveredEntityDate: z.string().min(1, "Date is required"),
+  integritySolutionsSignature: z.string().optional(),
   businessAssociateName: z.string().optional(),
   businessAssociateSignature: z.string().optional(),
   businessAssociateTitle: z.string().optional(),
@@ -31,6 +33,10 @@ export type SignatureData = z.infer<typeof signatureSchema>;
 export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Props) {
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Refs for signature pads (must be inside the component)
+  const coveredEntitySigPad = useRef<SignatureCanvas>(null);
+  const integritySolutionsSigPad = useRef<SignatureCanvas>(null);
+
   const form = useForm<SignatureData>({
     resolver: zodResolver(signatureSchema),
     defaultValues: {
@@ -39,6 +45,7 @@ export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Prop
       coveredEntitySignature: "",
       coveredEntityTitle: "",
       coveredEntityDate: "",
+      integritySolutionsSignature: "",
       businessAssociateName: "Integrity Tissue Solutions",
       businessAssociateSignature: "",
       businessAssociateTitle: "",
@@ -345,8 +352,8 @@ export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Prop
                 {/* Signature Section - shadcn Form */}
                 <Form {...form}>
                   <form onSubmit={form.handleSubmit(handleAgreeAndContinue)} className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
-                    <div className="grid grid-cols-2 gap-8">
-                      <div className="space-y-4">
+                    <div className="flex flex-col md:grid md:grid-cols-2 gap-8">
+                      <div className="space-y-4 mb-8 md:mb-0 p-2 md:p-0 bg-white rounded-md">
                         <p className="font-semibold mb-4">Covered Entity:</p>
                         <FormField
                           control={form.control}
@@ -381,7 +388,20 @@ export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Prop
                             <FormItem>
                               <FormLabel>Signature</FormLabel>
                               <FormControl>
-                                <Input {...field} className="w-full bg-blue-50 border-blue-300" placeholder="Enter signature" />
+                                <div>
+                                  <div className="w-full max-w-md h-[100px] bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center mb-2">
+                                    <SignatureCanvas
+                                      ref={coveredEntitySigPad}
+                                      penColor="black"
+                                      canvasProps={{ width: 400, height: 96, className: "outline-none bg-transparent w-full h-full" }}
+                                      onEnd={() => {
+                                        const dataUrl = coveredEntitySigPad.current?.getTrimmedCanvas().toDataURL("image/png") || "";
+                                        form.setValue("coveredEntitySignature", dataUrl, { shouldValidate: true });
+                                      }}
+                                    />
+                                  </div>
+                                  <button type="button" className="text-xs text-blue-600 underline mb-2" onClick={() => { coveredEntitySigPad.current?.clear(); form.setValue("coveredEntitySignature", "", { shouldValidate: true }); }}>Clear</button>
+                                </div>
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -414,7 +434,7 @@ export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Prop
                           )}
                         />
                       </div>
-                      <div className="space-y-4">
+                      <div className="space-y-4 p-2 md:p-0 bg-white rounded-md">
                         <p className="font-semibold mb-4">Integrity Tissue Solutions:</p>
                         <FormField
                           control={form.control}
@@ -436,7 +456,20 @@ export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Prop
                             <FormItem>
                               <FormLabel>Signature</FormLabel>
                               <FormControl>
-                                <Input {...field} className="w-full bg-blue-50 border-blue-300" placeholder="Enter signature" />
+                                <div>
+                                  <div className="w-full max-w-md h-[100px] bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center mb-2">
+                                    <SignatureCanvas
+                                      ref={integritySolutionsSigPad}
+                                      penColor="black"
+                                      canvasProps={{ width: 400, height: 96, className: "outline-none bg-transparent w-full h-full" }}
+                                      onEnd={() => {
+                                        const dataUrl = integritySolutionsSigPad.current?.getTrimmedCanvas().toDataURL("image/png") || "";
+                                        form.setValue("businessAssociateSignature", dataUrl, { shouldValidate: true });
+                                      }}
+                                    />
+                                  </div>
+                                  <button type="button" className="text-xs text-blue-600 underline mb-2" onClick={() => { integritySolutionsSigPad.current?.clear(); form.setValue("businessAssociateSignature", "", { shouldValidate: true }); }}>Clear</button>
+                                </div>
                               </FormControl>
                               <FormMessage />
                             </FormItem>
@@ -469,21 +502,21 @@ export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Prop
                           )}
                         />
                       </div>
-                    </div>
-                    <div className="mt-6 flex gap-4">
-                      <Button
-                        type="button"
-                        onClick={onBack}
-                        className="flex-1 bg-gray-600 hover:bg-gray-700 text-white text-base py-3 rounded-lg"
-                      >
-                        Back
-                      </Button>
-                      <Button
-                        type="submit"
-                        className="flex-1 bg-gray-300 hover:bg-gray-400 text-white text-base py-3 rounded-lg"
-                      >
-                        Agree and Continue
-                      </Button>
+                      <div className="mt-6 flex gap-4 col-span-2">
+                        <Button
+                          type="button"
+                          onClick={onBack}
+                          className="flex-1 bg-gray-600 hover:bg-gray-700 text-white text-base py-3 rounded-lg"
+                        >
+                          Back
+                        </Button>
+                        <Button
+                          type="submit"
+                          className="flex-1 bg-gray-300 hover:bg-gray-400 text-white text-base py-3 rounded-lg"
+                        >
+                          Agree and Continue
+                        </Button>
+                      </div>
                     </div>
                   </form>
                 </Form>
