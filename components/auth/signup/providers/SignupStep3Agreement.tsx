@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
@@ -32,10 +32,12 @@ export type SignatureData = z.infer<typeof signatureSchema>;
 
 export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Props) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [canvasWidth, setCanvasWidth] = useState(400);
 
   // Refs for signature pads (must be inside the component)
   const coveredEntitySigPad = useRef<SignatureCanvas>(null);
   const integritySolutionsSigPad = useRef<SignatureCanvas>(null);
+  const canvasContainerRef = useRef<HTMLDivElement>(null);
 
   const form = useForm<SignatureData>({
     resolver: zodResolver(signatureSchema),
@@ -54,6 +56,20 @@ export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Prop
   });
 
   const coveredEntityValue = useWatch({ control: form.control, name: "coveredEntity" });
+
+  // Resize canvas to match container width
+  useEffect(() => {
+    const updateCanvasSize = () => {
+      if (canvasContainerRef.current) {
+        const containerWidth = canvasContainerRef.current.offsetWidth - 8; // Account for padding
+        setCanvasWidth(containerWidth > 0 ? containerWidth : 400);
+      }
+    };
+
+    updateCanvasSize();
+    window.addEventListener('resize', updateCanvasSize);
+    return () => window.removeEventListener('resize', updateCanvasSize);
+  }, []);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const element = e.currentTarget;
@@ -388,12 +404,12 @@ export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Prop
                             <FormItem>
                               <FormLabel>Signature</FormLabel>
                               <FormControl>
-                                <div>
-                                  <div className="w-full max-w-md h-[100px] bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center mb-2">
+                                <div className="w-full">
+                                  <div ref={canvasContainerRef} className="w-full h-[100px] bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center mb-2 overflow-hidden">
                                     <SignatureCanvas
                                       ref={coveredEntitySigPad}
                                       penColor="black"
-                                      canvasProps={{ width: 400, height: 96, className: "outline-none bg-transparent w-full h-full" }}
+                                      canvasProps={{ width: canvasWidth, height: 96, className: "outline-none bg-transparent max-w-full" }}
                                       onEnd={() => {
                                         const dataUrl = coveredEntitySigPad.current?.getTrimmedCanvas().toDataURL("image/png") || "";
                                         form.setValue("coveredEntitySignature", dataUrl, { shouldValidate: true });
@@ -456,12 +472,12 @@ export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Prop
                             <FormItem>
                               <FormLabel>Signature</FormLabel>
                               <FormControl>
-                                <div>
-                                  <div className="w-full max-w-md h-[100px] bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center mb-2">
+                                <div className="w-full">
+                                  <div className="w-full h-[100px] bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center mb-2 overflow-hidden">
                                     <SignatureCanvas
                                       ref={integritySolutionsSigPad}
                                       penColor="black"
-                                      canvasProps={{ width: 400, height: 96, className: "outline-none bg-transparent w-full h-full" }}
+                                      canvasProps={{ width: canvasWidth, height: 96, className: "outline-none bg-transparent max-w-full" }}
                                       onEnd={() => {
                                         const dataUrl = integritySolutionsSigPad.current?.getTrimmedCanvas().toDataURL("image/png") || "";
                                         form.setValue("businessAssociateSignature", dataUrl, { shouldValidate: true });
