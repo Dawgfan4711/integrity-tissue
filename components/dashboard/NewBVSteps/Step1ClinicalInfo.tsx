@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { orderingProviders } from "@/lib/mockOrderingProviders";
 import { Button } from "@/components/ui/button";
 import {
   Select,
@@ -65,7 +66,18 @@ export function Step1ClinicalInfo({ onNext, onClose, defaultValues }: Step1Clini
             <FormItem>
               <FormLabel>Ordering Provider *</FormLabel>
               <FormControl>
-                <Input {...field} placeholder="Select provider..." />
+                <Select value={field.value} onValueChange={field.onChange} defaultValue={field.value}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select provider..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {orderingProviders.map((provider, idx) => (
+                      <SelectItem key={idx} value={provider.npiNumber}>
+                        {provider.providerName} - {provider.clinicName}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
