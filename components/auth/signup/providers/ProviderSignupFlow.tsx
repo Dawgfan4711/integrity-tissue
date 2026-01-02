@@ -6,6 +6,7 @@ import SignupStep2Verification from "./SignupStep2Verification";
 import SignupStep3Agreement, { SignatureData } from "./SignupStep3Agreement";
 import SignupStep4Summary from "./SignupStep4Summary";
 import SignupStep5Success from "./SignupStep5Success";
+import ProviderLogoHeader from "./ProviderLogoHeader";
 
 type SignupStep = 1 | 2 | 3 | 4 | 5;
 
@@ -50,37 +51,39 @@ export default function ProviderSignupFlow() {
   };
 
   return (
-    <>
-      {currentStep === 1 && (
-        <SignupStep1ClinicDetails 
-          onNext={handleStep1Next} 
-          defaultValues={clinicData || undefined}
-        />
-      )}
-      {currentStep === 2 && clinicData && (
-        <SignupStep2Verification
-          phone={clinicData.clinicPhone}
-          onNext={handleStep2Next}
-          onBack={handleStep2Back}
-        />
-      )}
-      {currentStep === 3 && (
-        <SignupStep3Agreement
-          onNext={handleStep3Next}
-          onBack={handleStep3Back}
-        />
-      )}
-      {currentStep === 4 && clinicData && signatureData && (
-        <SignupStep4Summary
-          clinicData={clinicData}
-          signatureData={signatureData}
-          onNext={handleStep4Next}
-          onBack={handleStep4Back}
-        />
-      )}
-      {currentStep === 5 && (
-        <SignupStep5Success />
-      )}
-    </>
+    <div className="w-screen min-h-screen flex flex-col items-center bg-[#1a1a2e]">
+      <div className="w-full flex-1 flex flex-col items-center justify-center">
+        {currentStep === 1 && (
+          <SignupStep1ClinicDetails 
+            onNext={handleStep1Next} 
+            defaultValues={clinicData || undefined}
+          />
+        )}
+        {currentStep === 2 && clinicData && (
+          <SignupStep2Verification
+            phone={clinicData.clinicPhone}
+            onNext={handleStep2Next}
+            onBack={handleStep2Back}
+          />
+        )}
+        {currentStep === 3 && (
+          <SignupStep3Agreement
+            onNext={handleStep3Next}
+            onBack={handleStep3Back}
+          />
+        )}
+        {currentStep === 4 && clinicData && signatureData && (
+          <SignupStep4Summary
+            clinicData={clinicData}
+            signatureData={signatureData}
+            onNext={handleStep4Next}
+            onBack={handleStep4Back}
+          />
+        )}
+        {currentStep === 5 && (
+          <SignupStep5Success />
+        )}
+      </div>
+    </div>
   );
 }

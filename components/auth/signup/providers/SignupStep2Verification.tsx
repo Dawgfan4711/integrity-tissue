@@ -41,22 +41,8 @@ export default function SignupStep2Verification({ phone, onNext, onBack }: Signu
   };
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-[#1a1a2e]">
+    <>
       <div className="w-full max-w-md p-8">
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 border-2 border-white rounded-lg flex items-center justify-center text-white">
-              <span className="text-2xl">+</span>
-            </div>
-            <div>
-              <h1 className="text-white text-sm font-light tracking-wide">INTEGRITY</h1>
-              <h1 className="text-white text-sm font-light tracking-wide">TISSUE</h1>
-              <p className="text-gray-400 text-xs tracking-wide">SOLUTIONS</p>
-            </div>
-          </div>
-          <h2 className="text-white text-xl font-normal">Provider Account Creation</h2>
-        </div>
-
         {/* Progress Steps */}
         <div className="mb-8 flex items-center justify-center gap-4">
           <div className="flex flex-col items-center">
@@ -142,6 +128,6 @@ export default function SignupStep2Verification({ phone, onNext, onBack }: Signu
           </Form>
         </div>
       </div>
-    </div>
+    </>
   );
 }
