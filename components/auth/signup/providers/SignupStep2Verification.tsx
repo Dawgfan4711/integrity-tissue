@@ -70,11 +70,10 @@ export default function SignupStep2Verification({ phone, onNext, onBack }: Signu
         </div>
 
         <div className="flex flex-col items-center mb-8">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-16 h-16 border-2 border-white rounded-lg flex items-center justify-center text-white">
-              <span className="text-3xl">+</span>
-            </div>
+          <div className="w-12 h-12 border-2 border-white rounded-lg flex items-center justify-center mb-4 text-white">
+            <span className="text-2xl">+</span>
           </div>
+          <div className="w-16 h-16 bg-white rounded mb-6" />
           <h1 className="text-2xl font-light tracking-widest text-white mb-1">INTEGRITY</h1>
           <h1 className="text-2xl font-light tracking-widest text-white mb-2">TISSUE</h1>
           <p className="text-gray-400 text-xs tracking-widest">— SOLUTIONS —</p>

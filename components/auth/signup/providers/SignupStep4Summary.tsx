@@ -14,7 +14,7 @@ interface SignupStep4Props {
 
 export default function SignupStep4Summary({ clinicData, signatureData, onNext, onBack }: SignupStep4Props) {
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-[#1a1a2e]">
+    <div className="w-screen h-full flex items-center justify-center bg-[#1a1a2e]">
       <div className="w-full max-w-2xl p-8">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">

@@ -90,7 +90,7 @@ export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Prop
   };
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-[#1a1a2e] p-8">
+    <div className="w-screen h-full flex items-center justify-center bg-[#1a1a2e] p-2 sm:p-8">
       <div className="w-full max-w-4xl h-full flex flex-col">
         {/* Header with Logo and Progress */}
         <div className="flex items-center justify-between mb-6">
@@ -136,7 +136,17 @@ export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Prop
         </div>
 
         {/* Agreement Document Card */}
-        <div className="flex-1 bg-white rounded-lg flex flex-col overflow-hidden">
+        <div className="flex-1 bg-white rounded-lg flex flex-col overflow-hidden min-h-[700px]">
+          {/* Logo Section (from AuthComponent) */}
+          <div className="flex flex-col items-center pt-8 pb-2">
+            <div className="w-12 h-12 border-2 border-gray-400 rounded-lg flex items-center justify-center mb-4 text-gray-700">
+              <span className="text-2xl">+</span>
+            </div>
+            <div className="w-16 h-2 bg-gray-400 rounded mb-4" />
+            <h1 className="text-2xl font-light tracking-widest text-gray-700 mb-1">INTEGRITY</h1>
+            <h1 className="text-2xl font-light tracking-widest text-gray-700 mb-2">TISSUE</h1>
+            <p className="text-gray-400 text-xs tracking-widest mb-2">— SOLUTIONS —</p>
+          </div>
           {/* Document Header */}
           <div className="bg-gray-100 px-6 py-4 border-b flex items-center justify-between">
             <h3 className="text-xl font-semibold text-black">Business Associate Agreement</h3>
@@ -145,7 +155,8 @@ export default function SignupStep3Agreement({ onNext, onBack }: SignupStep3Prop
           
           {/* Scrollable Content */}
           <div 
-            className="flex-1 overflow-y-auto px-8 py-6" 
+            className="flex-1 overflow-y-auto px-8 py-10" 
+            style={{ minHeight: 500, maxHeight: 'calc(80vh - 120px)' }}
             onScroll={handleScroll}
           >
             {/* eslint-disable react/no-unescaped-entities */}
