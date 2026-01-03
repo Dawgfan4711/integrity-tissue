@@ -3,7 +3,14 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -55,13 +62,18 @@ function SignupStep1ClinicDetails(props: SignupStep1Props) {
         <SignupStepper currentStep={1} />
         {/* Form */}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="clinicName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-black">Clinic/Practice Name</FormLabel>
+                  <FormLabel className="text-black">
+                    Clinic/Practice Name
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -95,7 +107,9 @@ function SignupStep1ClinicDetails(props: SignupStep1Props) {
               name="clinicPhone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-black">Clinic Phone Number</FormLabel>
+                  <FormLabel className="text-black">
+                    Clinic Phone Number
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -133,7 +147,9 @@ function SignupStep1ClinicDetails(props: SignupStep1Props) {
               name="providerName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-black">Physician/Provider Name</FormLabel>
+                  <FormLabel className="text-black">
+                    Physician/Provider Name
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -150,7 +166,9 @@ function SignupStep1ClinicDetails(props: SignupStep1Props) {
               name="providerSpecialty"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-black">Physician Specialty</FormLabel>
+                  <FormLabel className="text-black">
+                    Physician Specialty
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -200,14 +218,13 @@ function SignupStep1ClinicDetails(props: SignupStep1Props) {
             <div className="pt-4">
               <Button
                 type="submit"
-                className="w-full bg-gray-300 hover:bg-gray-400 text-white text-lg py-6 rounded-lg"
+                className="w-full bg-gray-300 hover:bg-gray-400 hover:text-white text-gray-800 text-lg py-6 rounded-lg"
               >
                 Continue
               </Button>
             </div>
           </form>
         </Form>
-
       </div>
     </div>
   );

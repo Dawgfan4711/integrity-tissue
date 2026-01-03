@@ -1,8 +1,14 @@
-
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 import SignatureCanvas from "react-signature-canvas";
 import type { UseFormReturn, SubmitHandler } from "react-hook-form";
 import type { SignatureData } from "../SignupStep3Agreement";
@@ -29,20 +35,27 @@ export default function AgreementPage6(props: AgreementPage6Props) {
     canvasContainerRef,
     canvasWidth,
     onBack,
-    onSubmit
+    onSubmit,
   } = props;
   return (
     <div className="mb-8 min-h-[80vh] border-t pt-6">
       <div className="text-right text-sm text-gray-600 mb-4">Page 6 of 6</div>
       <div className="space-y-4 text-sm text-black leading-relaxed">
-        <p>by hand delivery to such Party at its address given below or to such other address as shall be specified by the applicable party in the future:</p>
+        <p>
+          by hand delivery to such Party at its address given below or to such
+          other address as shall be specified by the applicable party in the
+          future:
+        </p>
         <p className="ml-6">
-          <strong>to Business Associate:</strong><br />
-          Integrity Tissue Solutions, Attn: Privacy Officer<br />
+          <strong>to Business Associate:</strong>
+          <br />
+          Integrity Tissue Solutions, Attn: Privacy Officer
+          <br />
           10 Hwy 98 STE 315 PMB#38 Bonaire, GA 31005
         </p>
         <p className="ml-6">
-          <strong>to Covered Entity:</strong><br />
+          <strong>to Covered Entity:</strong>
+          <br />
           <Input
             value={coveredEntityValue}
             onChange={(e) => onCoveredEntityChange(e.target.value)}
@@ -51,21 +64,33 @@ export default function AgreementPage6(props: AgreementPage6Props) {
           />
         </p>
         <p>
-          <strong>10.6</strong> Entire Agreement. This Agreement constitutes the entire understanding among the parties with respect to this subject matter.
+          <strong>10.6</strong> Entire Agreement. This Agreement constitutes the
+          entire understanding among the parties with respect to this subject
+          matter.
         </p>
         <p>
-          <strong>10.7</strong> Interpretation. Any ambiguity in this Agreement shall be resolved to permit Covered Entity to comply with the HIPAA Regulations.
+          <strong>10.7</strong> Interpretation. Any ambiguity in this Agreement
+          shall be resolved to permit Covered Entity to comply with the HIPAA
+          Regulations.
         </p>
         <p>
-          <strong>10.8</strong> Choice of Law and Venue. This Agreement shall be governed by the laws of the State of Georgia, without regard to any statute or case law on choice of laws. Venue for any legal action brought under this Agreement shall be brought exclusively in the United States District Court for the Middle District of Georgia.
+          <strong>10.8</strong> Choice of Law and Venue. This Agreement shall be
+          governed by the laws of the State of Georgia, without regard to any
+          statute or case law on choice of laws. Venue for any legal action
+          brought under this Agreement shall be brought exclusively in the
+          United States District Court for the Middle District of Georgia.
         </p>
         <p className="mt-6 font-semibold">
-          WITNESS WHEREOF, each of the parties has caused this Agreement to be executed in its name and on its behalf:
+          WITNESS WHEREOF, each of the parties has caused this Agreement to be
+          executed in its name and on its behalf:
         </p>
 
         {/* Signature Section - shadcn Form */}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="mt-8 p-6 bg-gray-50 rounded-lg border border-gray-200"
+          >
             <div className="flex flex-col md:grid md:grid-cols-2 gap-8">
               <div className="space-y-4 mb-8 md:mb-0 p-2 md:p-0 bg-white rounded-md">
                 <p className="font-semibold mb-4">Covered Entity:</p>
@@ -76,7 +101,11 @@ export default function AgreementPage6(props: AgreementPage6Props) {
                     <FormItem>
                       <FormLabel>Organization/Clinic Name</FormLabel>
                       <FormControl>
-                        <Input {...field} className="w-full bg-blue-50 border-blue-300" placeholder="Enter covered entity name" />
+                        <Input
+                          {...field}
+                          className="w-full bg-blue-50 border-blue-300"
+                          placeholder="Enter covered entity name"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -89,7 +118,11 @@ export default function AgreementPage6(props: AgreementPage6Props) {
                     <FormItem>
                       <FormLabel>Name (Printed)</FormLabel>
                       <FormControl>
-                        <Input {...field} className="w-full bg-blue-50 border-blue-300" placeholder="Enter name" />
+                        <Input
+                          {...field}
+                          className="w-full bg-blue-50 border-blue-300"
+                          placeholder="Enter name"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -103,18 +136,44 @@ export default function AgreementPage6(props: AgreementPage6Props) {
                       <FormLabel>Signature</FormLabel>
                       <FormControl>
                         <div className="w-full">
-                          <div ref={canvasContainerRef} className="w-full h-25 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center mb-2 overflow-hidden">
+                          <div
+                            ref={canvasContainerRef}
+                            className="w-full h-25 bg-blue-50 border border-blue-300 rounded-md flex items-center justify-center mb-2 overflow-hidden"
+                          >
                             <SignatureCanvas
                               ref={coveredEntitySigPad}
                               penColor="black"
-                              canvasProps={{ width: canvasWidth, height: 96, className: "outline-none bg-transparent max-w-full" }}
+                              canvasProps={{
+                                width: canvasWidth,
+                                height: 96,
+                                className:
+                                  "outline-none bg-transparent max-w-full",
+                              }}
                               onEnd={() => {
-                                const dataUrl = coveredEntitySigPad.current?.getTrimmedCanvas().toDataURL("image/png") || "";
-                                form.setValue("coveredEntitySignature", dataUrl, { shouldValidate: true });
+                                const dataUrl =
+                                  coveredEntitySigPad.current
+                                    ?.getTrimmedCanvas()
+                                    .toDataURL("image/png") || "";
+                                form.setValue(
+                                  "coveredEntitySignature",
+                                  dataUrl,
+                                  { shouldValidate: true }
+                                );
                               }}
                             />
                           </div>
-                          <button type="button" className="text-xs text-blue-600 underline mb-2" onClick={() => { coveredEntitySigPad.current?.clear(); form.setValue("coveredEntitySignature", "", { shouldValidate: true }); }}>Clear</button>
+                          <button
+                            type="button"
+                            className="text-xs text-blue-600 underline mb-2"
+                            onClick={() => {
+                              coveredEntitySigPad.current?.clear();
+                              form.setValue("coveredEntitySignature", "", {
+                                shouldValidate: true,
+                              });
+                            }}
+                          >
+                            Clear
+                          </button>
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -128,7 +187,11 @@ export default function AgreementPage6(props: AgreementPage6Props) {
                     <FormItem>
                       <FormLabel>Title</FormLabel>
                       <FormControl>
-                        <Input {...field} className="w-full bg-blue-50 border-blue-300" placeholder="Enter title" />
+                        <Input
+                          {...field}
+                          className="w-full bg-blue-50 border-blue-300"
+                          placeholder="Enter title"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -141,7 +204,11 @@ export default function AgreementPage6(props: AgreementPage6Props) {
                     <FormItem>
                       <FormLabel>Date</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} className="w-full bg-blue-50 border-blue-300" />
+                        <Input
+                          type="date"
+                          {...field}
+                          className="w-full bg-blue-50 border-blue-300"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -149,7 +216,9 @@ export default function AgreementPage6(props: AgreementPage6Props) {
                 />
               </div>
               <div className="space-y-4 p-2 md:p-0 bg-white rounded-md">
-                <p className="font-semibold mb-4">Integrity Tissue Solutions:</p>
+                <p className="font-semibold mb-4">
+                  Integrity Tissue Solutions:
+                </p>
                 <FormField
                   control={form.control}
                   name="businessAssociateName"
@@ -157,7 +226,11 @@ export default function AgreementPage6(props: AgreementPage6Props) {
                     <FormItem>
                       <FormLabel>By</FormLabel>
                       <FormControl>
-                        <Input {...field} disabled className="w-full bg-gray-100" />
+                        <Input
+                          {...field}
+                          disabled
+                          className="w-full bg-gray-100"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -175,14 +248,37 @@ export default function AgreementPage6(props: AgreementPage6Props) {
                             <SignatureCanvas
                               ref={integritySolutionsSigPad}
                               penColor="black"
-                              canvasProps={{ width: canvasWidth, height: 96, className: "outline-none bg-transparent max-w-full" }}
+                              canvasProps={{
+                                width: canvasWidth,
+                                height: 96,
+                                className:
+                                  "outline-none bg-transparent max-w-full",
+                              }}
                               onEnd={() => {
-                                const dataUrl = integritySolutionsSigPad.current?.getTrimmedCanvas().toDataURL("image/png") || "";
-                                form.setValue("businessAssociateSignature", dataUrl, { shouldValidate: true });
+                                const dataUrl =
+                                  integritySolutionsSigPad.current
+                                    ?.getTrimmedCanvas()
+                                    .toDataURL("image/png") || "";
+                                form.setValue(
+                                  "businessAssociateSignature",
+                                  dataUrl,
+                                  { shouldValidate: true }
+                                );
                               }}
                             />
                           </div>
-                          <button type="button" className="text-xs text-blue-600 underline mb-2" onClick={() => { integritySolutionsSigPad.current?.clear(); form.setValue("businessAssociateSignature", "", { shouldValidate: true }); }}>Clear</button>
+                          <button
+                            type="button"
+                            className="text-xs text-blue-600 underline mb-2"
+                            onClick={() => {
+                              integritySolutionsSigPad.current?.clear();
+                              form.setValue("businessAssociateSignature", "", {
+                                shouldValidate: true,
+                              });
+                            }}
+                          >
+                            Clear
+                          </button>
                         </div>
                       </FormControl>
                       <FormMessage />
@@ -196,7 +292,11 @@ export default function AgreementPage6(props: AgreementPage6Props) {
                     <FormItem>
                       <FormLabel>Title</FormLabel>
                       <FormControl>
-                        <Input {...field} className="w-full bg-blue-50 border-blue-300" placeholder="Enter title" />
+                        <Input
+                          {...field}
+                          className="w-full bg-blue-50 border-blue-300"
+                          placeholder="Enter title"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -209,7 +309,11 @@ export default function AgreementPage6(props: AgreementPage6Props) {
                     <FormItem>
                       <FormLabel>Date</FormLabel>
                       <FormControl>
-                        <Input type="date" {...field} className="w-full bg-blue-50 border-blue-300" />
+                        <Input
+                          type="date"
+                          {...field}
+                          className="w-full bg-blue-50 border-blue-300"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -226,7 +330,7 @@ export default function AgreementPage6(props: AgreementPage6Props) {
                 </Button>
                 <Button
                   type="submit"
-                  className="flex-1 bg-gray-300 hover:bg-gray-400 text-white text-base py-3 rounded-lg"
+                  className="flex-1 bg-gray-300 hover:bg-gray-400 hover:text-white text-gray-800 text-base py-3 rounded-lg"
                 >
                   Agree and Continue
                 </Button>
