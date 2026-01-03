@@ -1,5 +1,5 @@
-import ProviderSignupFlow from "@/components/auth/signup/providers/ProviderSignupFlow";
+import SignupClientPage from "@/components/auth/signup/providers/SignupClientPage";
 
-export default function ProviderSignupPage() {
-  return <ProviderSignupFlow />;
+export default function SignupPage() {
+  return <SignupClientPage />;
 }
