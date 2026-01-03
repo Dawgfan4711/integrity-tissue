@@ -52,7 +52,7 @@ export default function ProviderSignupFlow() {
 
   return (
     <div className="w-screen min-h-screen flex flex-col items-center bg-[#1a1a2e]">
-      <div className="w-full max-w-md my-8 mx-auto p-0 rounded-lg shadow-lg bg-card flex flex-col items-center justify-center">
+      <div className={`w-full ${currentStep === 3 ? 'max-w-[90%]' : 'max-w-md'} my-8 mx-auto p-0 rounded-lg shadow-lg bg-card flex flex-col items-center justify-center`}>
         <div className="w-full">
           {currentStep === 1 && (
             <SignupStep1ClinicDetails 
