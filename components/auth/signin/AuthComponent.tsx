@@ -1,9 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
-import { Phone } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import PhoneInput from 'react-phone-input-2';
@@ -12,6 +10,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { supabase } from "@/lib/supabaseClient";
 import { useAuthStore } from "@/store/auth";
+import VerifySignIn from "./VerifySignIn";
 
 
 const phoneSchema = z.object({
@@ -19,10 +18,6 @@ const phoneSchema = z.object({
     .string()
     .min(12, "Phone number is required")
     .regex(/^\+1\d{10}$/, "Enter a valid US phone number"),
-});
-
-const codeSchema = z.object({
-  code: z.string().length(6, "Enter the 6-digit code"),
 });
 
 export default function AuthComponent() {
@@ -36,12 +31,7 @@ export default function AuthComponent() {
     resolver: zodResolver(phoneSchema),
     defaultValues: { phone: "" },
   });
-
-  // Code form
-  const codeForm = useForm<z.infer<typeof codeSchema>>({
-    resolver: zodResolver(codeSchema),
-    defaultValues: { code: "" },
-  });
+  // No need for codeForm here, handled in VerifySignInPage
 
   // No longer need formatPhoneNumber, handled by PhoneInput
 
@@ -62,28 +52,7 @@ export default function AuthComponent() {
     }
   };
 
-  const handleVerifyCode = async (values: z.infer<typeof codeSchema>) => {
-    setIsSubmitting(true);
-    setError(null);
-    const phone = phoneForm.getValues("phone");
-    try {
-      const { data, error } = await supabase.auth.verifyOtp({
-        phone,
-        token: values.code,
-        type: "sms",
-      });
-      if (!error && data.session) {
-        setJwt(data.session.access_token);
-        window.location.href = "/dashboard";
-      } else {
-        setError(error?.message || "Invalid or expired code");
-      }
-    } catch (err) {
-      setError("Network error. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  // Remove handleVerifyCode, handled in VerifySignInPage
 
   return (
     <div
@@ -135,48 +104,42 @@ export default function AuthComponent() {
             </form>
           </Form>
         ) : (
-          <Form {...codeForm}>
-            <form onSubmit={codeForm.handleSubmit(handleVerifyCode)} className="space-y-4">
-              <FormField
-                control={codeForm.control}
-                name="code"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Verification Code</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="text"
-                        placeholder="123456"
-                        maxLength={6}
-                        className="w-full py-3 bg-muted border border-border rounded text-foreground text-base text-center tracking-widest outline-none"
-                        disabled={isSubmitting}
-                        {...field}
-                        value={field.value}
-                        onChange={e => field.onChange(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {error && <p className="text-destructive text-xs mt-2 text-left">{error}</p>}
-              <Button type="submit" disabled={isSubmitting} className="w-full mb-3">
-                {isSubmitting ? "Verifying..." : "Verify Code"}
-              </Button>
-              <button
-                type="button"
-                onClick={() => {
-                  setStage("enterPhone");
-                  codeForm.reset();
-                  setError(null);
-                }}
-                className="text-muted-foreground text-xs underline bg-transparent border-none cursor-pointer"
-              >
-                Back to phone number
-              </button>
-            </form>
-          </Form>
+          <VerifySignIn
+            phone={phoneForm.getValues("phone")}
+            isSubmitting={isSubmitting}
+            error={error}
+            onBack={() => {
+              setStage("enterPhone");
+              setError(null);
+            }}
+            onVerify={async (code) => {
+              setIsSubmitting(true);
+              setError(null);
+              try {
+                const phone = phoneForm.getValues("phone");
+                const { data, error: verifyError } = await supabase.auth.verifyOtp({
+                  phone,
+                  token: code,
+                  type: "sms",
+                });
+                if (!verifyError && data.session) {
+                  setJwt(data.session.access_token);
+                  window.location.href = "/dashboard";
+                } else {
+                  setError(verifyError?.message || "Invalid or expired code");
+                }
+              } catch (err) {
+                setError("Network error. Please try again.");
+              } finally {
+                setIsSubmitting(false);
+              }
+            }}
+          />
         )}
+        <div className="mt-6 text-center">
+          <span className="text-muted-foreground text-sm">Don&apos;t have an account? </span>
+          <a href="/signup" className="text-primary underline text-sm hover:text-primary/80">Register</a>
+        </div>
       </div>
     </div>
   );

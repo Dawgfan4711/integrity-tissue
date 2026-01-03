@@ -3,11 +3,19 @@
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormControl,
+  FormMessage,
+} from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import ProviderLogoHeader from "./ProviderLogoHeader";
+import SignupStepper from "./SignupStepper";
 
 const clinicDetailsSchema = z.object({
   clinicName: z.string().min(1, "Clinic/Practice name is required"),
@@ -46,40 +54,26 @@ function SignupStep1ClinicDetails(props: SignupStep1Props) {
   };
 
   return (
-    <div className="w-full max-w-md p-8">
-      <div className="bg-white rounded-lg p-8">
+    <div className="w-full max-w-md px-8 py-4">
+      <div className="bg-white rounded-lg p-0">
         {/* Logo and Title */}
         <ProviderLogoHeader />
         {/* Progress Steps */}
-        <div className="mb-8 flex items-center justify-center gap-4">
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mb-2">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-            </div>
-            <span className="text-gray-700 text-xs">Clinic Details</span>
-          </div>
-          <div className="w-24 h-1 bg-gray-300 mb-6" />
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center mb-2" />
-            <span className="text-gray-400 text-xs">Verification</span>
-          </div>
-          <div className="w-24 h-1 bg-gray-300 mb-6" />
-          <div className="flex flex-col items-center">
-            <div className="w-12 h-12 rounded-full bg-gray-300 flex items-center justify-center mb-2" />
-            <span className="text-gray-400 text-xs">Agreement</span>
-          </div>
-        </div>
+        <SignupStepper currentStep={1} />
         {/* Form */}
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
               name="clinicName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-black">Clinic/Practice Name</FormLabel>
+                  <FormLabel className="text-black">
+                    Clinic/Practice Name
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -113,7 +107,9 @@ function SignupStep1ClinicDetails(props: SignupStep1Props) {
               name="clinicPhone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-black">Clinic Phone Number</FormLabel>
+                  <FormLabel className="text-black">
+                    Clinic Phone Number
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -151,7 +147,9 @@ function SignupStep1ClinicDetails(props: SignupStep1Props) {
               name="providerName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-black">Physician/Provider Name</FormLabel>
+                  <FormLabel className="text-black">
+                    Physician/Provider Name
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -168,7 +166,9 @@ function SignupStep1ClinicDetails(props: SignupStep1Props) {
               name="providerSpecialty"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-black">Physician Specialty</FormLabel>
+                  <FormLabel className="text-black">
+                    Physician Specialty
+                  </FormLabel>
                   <FormControl>
                     <Input
                       {...field}
@@ -218,14 +218,13 @@ function SignupStep1ClinicDetails(props: SignupStep1Props) {
             <div className="pt-4">
               <Button
                 type="submit"
-                className="w-full bg-gray-300 hover:bg-gray-400 text-white text-lg py-6 rounded-lg"
+                className="w-full bg-gray-300 hover:bg-gray-400 hover:text-white text-gray-800 text-lg py-6 rounded-lg"
               >
                 Continue
               </Button>
             </div>
           </form>
         </Form>
-
       </div>
     </div>
   );

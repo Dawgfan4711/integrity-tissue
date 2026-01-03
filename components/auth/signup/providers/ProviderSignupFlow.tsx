@@ -1,7 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import SignupStep1ClinicDetails, { ClinicDetailsForm } from "./SignupStep1ClinicDetails";
+import SignupStep1ClinicDetails, {
+  ClinicDetailsForm,
+} from "./SignupStep1ClinicDetails";
 import SignupStep2Verification from "./SignupStep2Verification";
 import SignupStep3Agreement, { SignatureData } from "./SignupStep3Agreement";
 import SignupStep4Summary from "./SignupStep4Summary";
@@ -13,7 +15,9 @@ type SignupStep = 1 | 2 | 3 | 4 | 5;
 export default function ProviderSignupFlow() {
   const [currentStep, setCurrentStep] = useState<SignupStep>(1);
   const [clinicData, setClinicData] = useState<ClinicDetailsForm | null>(null);
-  const [signatureData, setSignatureData] = useState<SignatureData | null>(null);
+  const [signatureData, setSignatureData] = useState<SignatureData | null>(
+    null
+  );
 
   const handleStep1Next = (data: ClinicDetailsForm) => {
     setClinicData(data);
@@ -52,37 +56,52 @@ export default function ProviderSignupFlow() {
 
   return (
     <div className="w-screen min-h-screen flex flex-col items-center bg-[#1a1a2e]">
-      <div className="w-full flex-1 flex flex-col items-center justify-center">
-        {currentStep === 1 && (
-          <SignupStep1ClinicDetails 
-            onNext={handleStep1Next} 
-            defaultValues={clinicData || undefined}
-          />
-        )}
-        {currentStep === 2 && clinicData && (
-          <SignupStep2Verification
-            phone={clinicData.clinicPhone}
-            onNext={handleStep2Next}
-            onBack={handleStep2Back}
-          />
-        )}
-        {currentStep === 3 && (
-          <SignupStep3Agreement
-            onNext={handleStep3Next}
-            onBack={handleStep3Back}
-          />
-        )}
-        {currentStep === 4 && clinicData && signatureData && (
-          <SignupStep4Summary
-            clinicData={clinicData}
-            signatureData={signatureData}
-            onNext={handleStep4Next}
-            onBack={handleStep4Back}
-          />
-        )}
-        {currentStep === 5 && (
-          <SignupStep5Success />
-        )}
+      <div
+        className={`w-full ${
+          currentStep === 3 ? "max-w-[90%]" : "max-w-md"
+        } my-8 mx-auto p-0 rounded-lg shadow-lg bg-card flex flex-col items-center justify-center`}
+      >
+        <div className="w-full">
+          {currentStep === 1 && (
+            <SignupStep1ClinicDetails
+              onNext={handleStep1Next}
+              defaultValues={clinicData || undefined}
+            />
+          )}
+          {currentStep === 2 && clinicData && (
+            <SignupStep2Verification
+              phone={clinicData.clinicPhone}
+              onNext={handleStep2Next}
+              onBack={handleStep2Back}
+            />
+          )}
+          {currentStep === 3 && (
+            <SignupStep3Agreement
+              onNext={handleStep3Next}
+              onBack={handleStep3Back}
+            />
+          )}
+          {currentStep === 4 && clinicData && signatureData && (
+            <SignupStep4Summary
+              clinicData={clinicData}
+              signatureData={signatureData}
+              onNext={handleStep4Next}
+              onBack={handleStep4Back}
+            />
+          )}
+          {currentStep === 5 && <SignupStep5Success />}
+        </div>
+        <div className="text-center mb-4">
+          <span className="text-muted-foreground text-sm">
+            Already have an account?{" "}
+          </span>
+          <a
+            href="/auth"
+            className="text-primary underline text-sm hover:text-primary/80"
+          >
+            Back to sign in
+          </a>
+        </div>
       </div>
     </div>
   );
